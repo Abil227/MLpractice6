@@ -1,56 +1,65 @@
-# Practical Task 6 — Deploy ML Model with FastAPI and Docker
+# SIS-3 — ML System with Streamlit Frontend & MLflow
 
 ## Project Structure
 ```
-task6/
-├── train.py          # Step 1: Train and save the model
-├── main.py           # Step 2: FastAPI application
-├── model.joblib      # Generated after running train.py
-├── requirements.txt  # Dependencies
-├── Dockerfile        # Step 4: Container instructions
+sis3/
+├── train.py            # Train model + MLflow experiment tracking + model registry
+├── main.py             # FastAPI application
+├── streamlit_app.py    # Streamlit frontend
+├── model.joblib        # Generated after running train.py
+├── requirements.txt    # Dependencies
+├── Dockerfile          # FastAPI container
+├── docker-compose.yml  # Full stack: API + Streamlit + MLflow
 └── README.md
 ```
 
 ---
 
-## Step 1 — Train the Model
+## Run Locally
+
+### 1. Install & train
 ```bash
 pip install -r requirements.txt
 python train.py
 ```
-Generates `model.joblib`.
+MLflow will log: parameters, accuracy, f1_score, model artifact, and register model as `IrisClassifier`.
 
----
-
-## Step 2 & 3 — Run FastAPI Locally
+### 2. Start FastAPI
 ```bash
 uvicorn main:app --reload
 ```
-- Root endpoint: http://localhost:8000/
-- Predict endpoint: http://localhost:8000/predict
-- Swagger docs: http://localhost:8000/docs
+→ http://localhost:8000
 
-### Test /predict via curl:
+### 3. Start Streamlit frontend
 ```bash
-curl -X POST http://localhost:8000/predict \
-  -H "Content-Type: application/json" \
-  -d '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}'
+streamlit run streamlit_app.py
 ```
+→ http://localhost:8501
+
+### 4. Start MLflow UI
+```bash
+mlflow ui
+```
+→ http://localhost:5000
 
 ---
 
-## Step 4 & 5 — Build Docker Image
+## Run with Docker (Full Stack)
 ```bash
-docker build -t iris-ml-api .
+docker-compose up --build
 ```
 
-## Step 6 — Run the Container
-```bash
-docker run -p 8000:8000 iris-ml-api
-```
-Then test the same endpoints at http://localhost:8000
-<img width="1514" height="873" alt="image" src="https://github.com/user-attachments/assets/89a67942-b41e-4764-b10d-9fa0ccf5ba0d" />
+| Service   | URL                        |
+|-----------|----------------------------|
+| FastAPI   | http://localhost:8000      |
+| Swagger   | http://localhost:8000/docs |
+| Streamlit | http://localhost:8501      |
+| MLflow    | http://localhost:5000      |
 
-<img width="1542" height="1098" alt="image" src="https://github.com/user-attachments/assets/c157e0e0-36a7-48b6-a269-54209c2683e1" />
-<img width="1482" height="1025" alt="image" src="https://github.com/user-attachments/assets/e57d1f8c-d7b6-49c7-a6ea-780c051c7ffc" />
+---
 
+## MLflow Details
+- **Experiment name:** `iris-classification`
+- **Logged params:** `n_estimators`, `max_depth`, `random_state`
+- **Logged metrics:** `accuracy`, `f1_score`
+- **Model Registry name:** `IrisClassifier`
