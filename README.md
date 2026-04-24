@@ -49,3 +49,10 @@ docker build -t iris-ml-api .
 docker run -p 8000:8000 iris-ml-api
 ```
 Then test the same endpoints at http://localhost:8000
+
+<img width="1514" height="873" alt="Снимок экрана 2026-04-24 232556" src="https://github.com/user-attachments/assets/f7e67299-f73b-4648-aff3-f41ad4234853" />
+<img width="1482" height="1025" alt="Снимок экрана 2026-04-24 232610" src="https://github.com/user-attachments/assets/64e74cf1-1f9a-43ed-8908-07df278719d2" />
+<img width="1542" height="1098" alt="Снимок экрана 2026-04-24 232618" src="https://github.com/user-attachments/assets/59b4851a-aa7b-482d-bea7-b4e1d4f55085" />
+
+
+
